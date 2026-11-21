@@ -2,7 +2,7 @@
 
 GhostChef is a food-ordering platform I started in 2019 and have owned ever since: product, architecture, code, infrastructure, and for almost two years the restaurant that ran on it. I wrote the first version by hand, and [that 2019 to 2023 code is public](https://github.com/stars/mkhinini-motaz/lists/ghostchef). A real restaurant took orders through it from December 2021 to October 2023, at 200+ orders a day at peak.
 
-Since September 2026 I have been rebuilding it as a delivery platform with a coding agent (Claude Code) and my own agent tooling. It is in development and not launched. The new code is private; I walk through it on request.
+Since September 2026 I have been rebuilding it as a delivery platform for restaurants, shops and service businesses, with a coding agent (Claude Code) and my own agent tooling. It is in development and not launched. The new code is private; I walk through it on request.
 
 [![21 second demo](media/demo.gif)](media/brag.mp4)
 
@@ -35,6 +35,49 @@ Totals: about 1,300 commits by hand, 4,271 since 6 September 2026. Counts cover 
 - **Code:** API, web apps, mobile apps, realtime server.
 - **Infrastructure:** containers, reverse proxy, Terraform, CI, backups, releases.
 - **Operations (the restaurant years):** clients, suppliers, marketing and finances, next to the engineering.
+
+## What the platform does
+
+Four sides use it: customers, shops, riders and the operations team. Each has a phone app, and all but riders have a web app too.
+
+**Customers**
+- Delivery, collection at the shop or eating in, ordered now or scheduled for a later time.
+- Dish options with defaults and a price quote before checkout.
+- Group cart: friends join with a code and add their own items, and one person pays for the whole order.
+- Live order tracking, with the rider shown on a map.
+- Loyalty points for orders, reviews, referrals, birthdays and ordering streaks, spent on promo codes with a monthly cap.
+- One rating per order with reasons and photos, plus cancellation, refunds, disputes and a help inbox.
+- Appointments at service shops such as barbers, car washes and tailors, and jewelry pieces reserved online and collected at the shop.
+
+**Shops**
+- 18 shop categories and 8 service categories, from restaurants and butchers to jewelers and barbers.
+- Incoming orders ring on the shop's phone; staff accept, prepare and hand them to a rider, and a ready screen shows which orders wait for collection.
+- A free till for counter and phone sales. It keeps working offline and sends the sales when the server answers again.
+- Menu editor with options, hidden items and reordering. Menu changes wait for an admin's review; price changes show at once.
+- Weighed items for butchers and fishmongers: the shop records the real weight, with tolerance rules and a call to the customer when an item comes up short.
+- Stock tracking with ingredients, recipes, purchases, waste and blind counts. It never blocks an order.
+- Promotions the shop pays for, with a report for each one, and replies to customer reviews.
+- Staff accounts with five roles, sales summaries and a monthly summary.
+
+**Riders**
+- Sign-up with document upload. An admin reviews each paper, and an expired paper stops new orders until a renewed one is accepted.
+- Delivery offers go to one rider at a time, nearest first, with a time limit to accept and an optional auto-accept.
+- Availability slots, a cash ledger of the money the rider holds, an SOS button and a performance view.
+
+**Operations team**
+- Dispatch board: automatic dispatch with a pause per zone, manual assignment and held orders when no rider is online.
+- Zones drawn on a map, each with its own fees, riders and staff. A zone manager sees only their own zones.
+- Cash tracking from customer to rider to shop to platform, with counted handovers, payout runs and a lost-cash process.
+- Expenses, profit and loss, and fee statements per zone.
+- Customer, shop and rider management: onboarding, document review, suspension, merging duplicate customers and point adjustments that need approval.
+- A support inbox for all three sides, disputes, refunds and moderation of ratings and photos.
+- Marketing banners and campaigns with a weekly cap per customer, and an editor for the loyalty rules.
+- Scorecards for shops, riders and customers, alerts routed by type, a risk queue and an audit log of every change.
+
+**Across the platform**
+- Every order is paid in cash, by design. Amounts are stored in millimes and the prices in force are stamped on each order.
+- Privacy consent per version of the notice, account deletion, and accessibility checks against RGAA 4.1.2, the French accessibility standard.
+- A local guide called City (places, notices, a marketplace, lost and found), built in parts and not finished.
 
 ## Architecture
 
@@ -76,20 +119,56 @@ flowchart LR
 
 Each box exists as a repository: `food-api`, `ghostws`, `food-client`, `food-shop`, `food-admin`, `ghostclient`, `ghostshopapp`, `ghostriderapp`, `ghostadminapp`, `ghost-infra`. The API serves four JWT surfaces (customer, shop, rider, admin). The realtime server uses the Socket.IO Redis adapter. Push goes through Firebase.
 
+## Simulation testing
+
+Before a feature lands, a simulated town plays a whole evening against the real platform. Bots act as customers, shop staff, riders and admins, and make the same HTTP and Socket.IO calls as the apps.
+
+They run against the real API, queue worker, scheduler and realtime server, in a copy with its own database, Redis and ports. Text messages and push notifications go to a file, and the tools refuse any database whose name does not mark it as a simulation copy.
+
+A checker watches every run and writes a report: what broke, response times per endpoint, and a night report per zone. A real finding becomes a failing API test first, then the fix. Every feature's spec names its simulator change, or says why it needs none.
+
+- **The town:** 6 zones drawn from real town boundaries, 50 shops with real-style menus and opening hours, 72 riders and 890 customers.
+- **Scripts:** 45 order scripts, 105 world events and 16 abuse cases. Examples: a double-tapped checkout, a rider who ignores an offer, a promo code used twice, nobody at the door.
+- **Modes:** a smoke run of every script, busy evenings, a played week, a 45-minute load test at 300 orders an hour, and chaos runs that restart Redis, the realtime server, the queue and the API.
+- **Checks during the run:** order states only move forward, a shop never sees a customer's phone number, each zone charges its own fee, a closed zone takes no order.
+- **Checks after the run:** nothing is stuck, every app shows the same status and total, cash and points balances add up, and every refusal message exists in all five languages.
+- **Bugs it found:** a double-tapped checkout placed two orders, a rider's offer showed the customer's phone number, and a race between two jewelry reservations returned a server error. Each now has a test.
+- **Scale:** one smoke run on 21 November 2026 played 70 orders and sent 64,357 API requests in 39 minutes.
+- **Emulator walks:** 25 written walks drive the four phone apps on an Android emulator, from order to delivery, with Arabic and large-text passes.
+
+I turned the method into a public Claude Code skill: [simulate](https://github.com/mkhinini-motaz/simulate). It reads a project's routes and roles, writes the rules with their sources, generates the bots, keeps the same database guard, and counts a finding only when a failing test proves it.
+
 ## Things worth a look
 
 - **Five UI languages**, including Tunisian Derja in Arabic and in Latin script, with right-to-left layout (five locale files in the API and in the customer app).
-- **Role-based access:** 11 admin roles and 5 shop roles. The API checks permissions in middleware and answers 403 when a role lacks one. There is no feature-flag system, only environment switches.
+- **Role-based access:** 15 admin roles, 63 named permissions and 5 shop roles. The API checks permissions in middleware and answers 403 when a role lacks one.
+- **Admin switches:** the operations team turns features on and off from the admin apps, with no deploy, and each change records who made it:
+  - automatic dispatch, per zone;
+  - ordering in one zone or everywhere, now or on a schedule;
+  - each loyalty rule, and the City sections per zone;
+  - over 100 limits, such as how long a rider has to accept an offer.
 - **Tests:** 364 test files in the API and 366 across the four React Native apps (114 customer, 81 merchant, 62 rider, 109 admin). The three web apps have none yet.
 - **Quality gates:** PHPStan with a baseline, GitHub Actions, and a secret-scan workflow in each repository.
-- **Simulators and emulator walks** in `ghost-infra`: scripted days of orders, riders and merchants, and 25 written walks through the apps on an emulator.
 
-| | | |
-|---|---|---|
-| ![Customer app, Arabic](media/screens/customer-app-ar-home.png) | ![Cart, Arabic](media/screens/customer-app-ar-cart.png) | ![Admin app, Derja, RTL](media/screens/admin-app-derja-rtl.png) |
-| Customer app, Arabic | Cart, Arabic | Admin app, Derja, RTL |
-| ![Rider app](media/screens/rider-app-papers.png) | ![Shop web overview](media/screens/shop-web-overview.png) | ![Customer web, Arabic](media/screens/customer-web-ar.png) |
-| Rider app | Shop web overview | Customer web, Arabic |
+## Screens
+
+Phone apps:
+
+| Customer app, Arabic home | Customer app, Arabic cart | Customer app, dish options |
+|:---:|:---:|:---:|
+| ![Customer app home in Arabic](media/screens/customer-app-ar-home.png) | ![Customer app cart in Arabic](media/screens/customer-app-ar-cart.png) | ![Dish options in French](media/screens/customer-app-fr-options.png) |
+| **Customer app, loyalty points** | **Shop app, till** | **Shop app, offline sale** |
+| ![Loyalty points and promo-code shop in French](media/screens/customer-app-fr-loyalty.png) | ![Shop till in French](media/screens/shop-app-fr-sell.png) | ![Shop till keeping a sale offline](media/screens/shop-app-en-offline-sale.png) |
+| **Rider app, route** | **Rider app, papers** | **Admin app, Derja** |
+| ![Rider route with an expired-paper banner](media/screens/rider-app-en-route-home.png) | ![Rider documents](media/screens/rider-app-papers.png) | ![Admin app in Tunisian Derja](media/screens/admin-app-derja-rtl.png) |
+
+Web apps:
+
+| Admin web, control centre | Shop web, sales overview |
+|:---:|:---:|
+| ![Admin control centre](media/screens/admin-web-en-control-centre.png) | ![Shop sales overview](media/screens/shop-web-overview.png) |
+| **Customer web, Arabic menu** | **Customer web, loyalty and promo codes** |
+| ![Customer menu in Arabic](media/screens/customer-web-ar.png) | ![Customer loyalty page](media/screens/customer-web-en-loyalty-promo.png) |
 
 All data in the screenshots is test data.
 
@@ -122,10 +201,11 @@ Links: [LinkedIn](https://www.linkedin.com/in/moatez-mkhinini) and [GitHub](http
 
 ## How these numbers were measured
 
-All on 17 November 2026, in the private repositories.
+Commits and test files on 17 November 2026, everything else on 21 November 2026, in the private repositories.
 
 - Commits per year: `git log --format=%ad --date=format:%Y` per repository, summed. Agent-assisted: `git log --since=2026-09-06 --format=%B | grep -c '^Co-Authored-By: Claude'`, summed over the ten repositories (4,067 of 4,271).
 - Test files: `git ls-files` counts per repository, the same day. A stricter filename pattern gives 360 for the API and 368 for the apps, so both are about right.
-- Roles: the role constants in the API's admin and shop-user models. Locales: the five `*.json` files in the API's `resources/lang` and the customer app's `src/i18n`.
-- Walks: `ls ghost-infra/emu/walks/*.md | wc -l` (25). Video lengths: `ffprobe`.
-- Orders per day (200+ at peak) and the restaurant dates are my own records, not a command.
+- Roles and permissions: `Admin::ROLES` (15), the permission names in the API's `Permission` class (63) and the shop-user roles (5). Shop kinds: `Shop::CATEGORIES` (18) and `SERVICE_CATEGORIES` (8). Admin limits: 124 entries in the platform settings catalogue.
+- Locales: the five `*.json` files in the API's `resources/lang` and the customer app's `src/i18n`.
+- Simulator: scripts counted by loading `scenarios.mjs` and `fraud.mjs` in Node; the town from the zone table in the simulator's README; the smoke run from its `summary.md`. Walks: `ls ghost-infra/emu/walks/*.md | wc -l` (25).
+- Video lengths: `ffprobe`. Orders per day (200+ at peak) and the restaurant dates are my own records, not a command.
