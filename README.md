@@ -2,6 +2,8 @@
 
 GhostChef is a food-ordering platform I started in 2019 and have owned ever since: product, architecture, code, infrastructure, and for almost two years the restaurant that ran on it. I wrote the first version by hand, and [that 2019 to 2023 code is public](https://github.com/stars/mkhinini-motaz/lists/ghostchef). A real restaurant took orders through it from December 2021 to October 2023, at 200+ orders a day at peak.
 
+The restaurant's pages are still online: [Facebook](https://www.facebook.com/ghostchef.tn) with 5.3K followers, [Instagram](https://www.instagram.com/ghostchef.tn/), and [Google Maps](https://maps.google.com/?cid=8810174624179311072) with 4.5 stars from 12 reviews, now marked as permanently closed.
+
 Since September 2026 I have been rebuilding it as a delivery platform for restaurants, shops and service businesses, with a coding agent (Claude Code) and my own agent tooling. It is in development and not launched. The new code is private; I walk through it on request.
 
 [![21 second demo](media/demo.gif)](media/brag.mp4)
@@ -217,4 +219,5 @@ Test files on 17 November 2026, everything else on 21 November 2026, in the priv
 - Roles and permissions: `Admin::ROLES` (15), the permission names in the API's `Permission` class (63) and the shop-user roles (5). Shop kinds: `Shop::CATEGORIES` (18) and `SERVICE_CATEGORIES` (8). Admin limits: 124 entries in the platform settings catalogue.
 - Locales: the five `*.json` files in the API's `resources/lang` and the customer app's `src/i18n`.
 - Simulator: scripts counted by loading `scenarios.mjs` and `fraud.mjs` in Node; the town from the zone table in the simulator's README; the smoke run from its `summary.md`. Walks: `ls ghost-infra/emu/walks/*.md | wc -l` (25).
+- Restaurant pages: follower counts and the Google rating as the pages showed them on 21 November 2026.
 - Video lengths: `ffprobe`. Orders per day (200+ at peak) and the restaurant dates are my own records, not a command.
