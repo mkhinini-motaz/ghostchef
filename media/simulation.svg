@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 430" width="880" height="430" role="img" aria-label="How a GhostChef simulation run works">
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:#1f2328}
+.m{fill:#59636e}.card{fill:#f6f8fa;stroke:#d1d9e0}
+.blue{fill:#2f6fde}.green{fill:#1a7f37}.orange{fill:#e8743b}
+.chip{fill-opacity:.12;stroke-opacity:.55}.blue.chip{stroke:#2f6fde}.green.chip{stroke:#1a7f37}.orange.chip{stroke:#e8743b}
+.arrow{stroke:#8c959f;stroke-width:2}.head{fill:#8c959f}
+@media (prefers-color-scheme:dark){text{fill:#e6edf3}.m{fill:#9198a1}.card{fill:#151b23;stroke:#3d444d}
+.blue{fill:#4493f8}.green{fill:#3fb950}.orange{fill:#f0883e}
+.blue.chip{stroke:#4493f8}.green.chip{stroke:#3fb950}.orange.chip{stroke:#f0883e}
+.chip{fill-opacity:.18}.arrow{stroke:#6e7681}.head{fill:#6e7681}}
+</style>
+<defs><marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path class="head" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text x="20" y="26" font-size="16" text-anchor="start" font-weight="600">How a simulation run works</text>
+<text x="20" y="46" font-size="12" text-anchor="start" class="m">Modes: a smoke run of every script, busy evenings, a played week, a load test at 300 orders an hour, chaos runs that restart services.</text>
+<rect class="card" x="20" y="66" width="260" height="130" rx="8"/>
+<rect class="blue" x="20" y="66" width="4" height="130" rx="2"/>
+<text x="36" y="90" font-size="14" text-anchor="start" font-weight="600">The town</text>
+<text x="36" y="116" font-size="13" text-anchor="start">6 zones from real town boundaries</text>
+<text x="36" y="138" font-size="13" text-anchor="start">50 shops, 72 riders, 890 customers</text>
+<text x="36" y="160" font-size="13" text-anchor="start">45 order scripts, 105 world events</text>
+<text x="36" y="182" font-size="13" text-anchor="start">16 abuse cases</text>
+<line class="arrow" x1="150.0" y1="196" x2="150.0" y2="210" marker-end="url(#head)"/>
+<rect class="card" x="20" y="212" width="260" height="138" rx="8"/>
+<rect class="blue" x="20" y="212" width="4" height="138" rx="2"/>
+<text x="36" y="236" font-size="14" text-anchor="start" font-weight="600">Bots play every role</text>
+<rect class="blue chip" x="36" y="248" width="110" height="28" rx="6"/>
+<text x="91.0" y="266.68" font-size="13" text-anchor="middle">Customers</text>
+<rect class="blue chip" x="156" y="248" width="110" height="28" rx="6"/>
+<text x="211.0" y="266.68" font-size="13" text-anchor="middle">Shop staff</text>
+<rect class="blue chip" x="36" y="282" width="110" height="28" rx="6"/>
+<text x="91.0" y="300.68" font-size="13" text-anchor="middle">Riders</text>
+<rect class="blue chip" x="156" y="282" width="110" height="28" rx="6"/>
+<text x="211.0" y="300.68" font-size="13" text-anchor="middle">Admins</text>
+<text x="36" y="330" font-size="12" text-anchor="start" class="m">with the apps&#x27; own HTTP and</text>
+<text x="36" y="345" font-size="12" text-anchor="start" class="m">Socket.IO calls</text>
+<line class="arrow" x1="280" y1="281" x2="308" y2="281" marker-end="url(#head)"/>
+<rect class="card" x="310" y="66" width="260" height="284" rx="8"/>
+<rect class="green" x="310" y="66" width="4" height="284" rx="2"/>
+<text x="326" y="90" font-size="14" text-anchor="start" font-weight="600">Isolated copy of the platform</text>
+<rect class="green chip" x="326" y="104" width="228" height="30" rx="6"/>
+<text x="440.0" y="123.68" font-size="13" text-anchor="middle">Laravel API</text>
+<rect class="green chip" x="326" y="142" width="228" height="30" rx="6"/>
+<text x="440.0" y="161.68" font-size="13" text-anchor="middle">Queue worker and scheduler</text>
+<rect class="green chip" x="326" y="180" width="228" height="30" rx="6"/>
+<text x="440.0" y="199.68" font-size="13" text-anchor="middle">Socket.IO server and Redis</text>
+<rect class="green chip" x="326" y="218" width="228" height="30" rx="6"/>
+<text x="440.0" y="237.68" font-size="13" text-anchor="middle">Its own MySQL database</text>
+<rect class="green chip" x="326" y="256" width="228" height="30" rx="6"/>
+<text x="440.0" y="275.68" font-size="13" text-anchor="middle">Outbox file for SMS and push</text>
+<text x="326" y="312" font-size="12" text-anchor="start" class="m">The tools refuse any database whose</text>
+<text x="326" y="328" font-size="12" text-anchor="start" class="m">name does not mark it as a copy.</text>
+<line class="arrow" x1="570" y1="208" x2="598" y2="208" marker-end="url(#head)"/>
+<rect class="card" x="600" y="66" width="260" height="200" rx="8"/>
+<rect class="orange" x="600" y="66" width="4" height="200" rx="2"/>
+<text x="616" y="90" font-size="14" text-anchor="start" font-weight="600">Checker</text>
+<text x="616" y="114" font-size="12" text-anchor="start" class="m" font-weight="600">During the run</text>
+<text x="616" y="134" font-size="13" text-anchor="start">order states only move forward</text>
+<text x="616" y="152" font-size="13" text-anchor="start">no shop sees a customer&#x27;s number</text>
+<text x="616" y="170" font-size="13" text-anchor="start">each zone charges its own fee</text>
+<text x="616" y="196" font-size="12" text-anchor="start" class="m" font-weight="600">After the run</text>
+<text x="616" y="216" font-size="13" text-anchor="start">nothing stuck, every app agrees</text>
+<text x="616" y="234" font-size="13" text-anchor="start">cash and points add up</text>
+<text x="616" y="252" font-size="13" text-anchor="start">refusals exist in 5 languages</text>
+<line class="arrow" x1="730.0" y1="266" x2="730.0" y2="278" marker-end="url(#head)"/>
+<rect class="card" x="600" y="280" width="260" height="70" rx="8"/>
+<rect class="orange" x="600" y="280" width="4" height="70" rx="2"/>
+<text x="616" y="304" font-size="14" text-anchor="start" font-weight="600">Run report</text>
+<text x="616" y="322" font-size="12" text-anchor="start" class="m">violations, response times per endpoint,</text>
+<text x="616" y="338" font-size="12" text-anchor="start" class="m">a night report per zone</text>
+<line class="arrow" x1="730.0" y1="350" x2="730.0" y2="384" marker-end="url(#head)"/>
+<rect class="orange chip" x="600" y="386" width="260" height="34" rx="6"/>
+<text x="730.0" y="407.68" font-size="13" text-anchor="middle">A real finding: a failing API test</text>
+<line class="arrow" x1="598" y1="403" x2="574" y2="403" marker-end="url(#head)"/>
+<rect class="green chip" x="310" y="386" width="260" height="34" rx="6"/>
+<text x="440.0" y="407.68" font-size="13" text-anchor="middle">Then the fix</text>
+<line class="arrow" x1="308" y1="403" x2="284" y2="403" marker-end="url(#head)"/>
+<rect class="blue chip" x="20" y="386" width="260" height="34" rx="6"/>
+<text x="150.0" y="407.68" font-size="13" text-anchor="middle">Next run replays the same seed</text>
+<line class="arrow" x1="150.0" y1="386" x2="150.0" y2="352" marker-end="url(#head)"/>
+</svg>

@@ -16,6 +16,11 @@ Since September 2026 I have been rebuilding it as a delivery platform for restau
 - **2024 to 2025: pause.** There are no commits in these two years.
 - **Sep 2026: rebuild with a coding agent.** Same product, new foundations, four React Native apps, an admin web app and an infrastructure repo.
 
+![Total commits over time: 1,287 by hand from April 2019 to 2023, none in 2024 and 2025, then 4,434 more from 6 September 2026, 4,228 of them with Claude Code, for 5,721 in total by 20 November 2026](media/commits-over-time.svg)
+
+<details>
+<summary>Commits per year as a table</summary>
+
 | Year | Commits by hand | Agent-assisted commits |
 |---|---|---|
 | 2019 | 13 | 0 |
@@ -24,9 +29,11 @@ Since September 2026 I have been rebuilding it as a delivery platform for restau
 | 2022 | 251 | 0 |
 | 2023 | 359 | 0 |
 | 2024 to 2025 | 0 | 0 |
-| 2026 (from 6 Sep) | about 200 without the trailer | 4,067 |
+| 2026 (6 Sep to 20 Nov) | about 200 without the trailer | 4,228 |
 
-Totals: about 1,300 commits by hand, 4,271 since 6 September 2026. Counts cover ten repositories, five of them new in 2026 (the 2019 to 2023 rows come from the five older ones). A few early commits in the customer web app are by two other people; the rest are mine.
+</details>
+
+Totals: about 1,300 commits by hand, 4,434 since 6 September 2026. Counts cover ten repositories, five of them new in 2026 (the 2019 to 2023 rows come from the five older ones). A few early commits in the customer web app are by two other people; the rest are mine.
 
 ## What I own end to end
 
@@ -125,6 +132,8 @@ Before a feature lands, a simulated town plays a whole evening against the real 
 
 They run against the real API, queue worker, scheduler and realtime server, in a copy with its own database, Redis and ports. Text messages and push notifications go to a file, and the tools refuse any database whose name does not mark it as a simulation copy.
 
+![How a simulation run works: a town of 6 zones, 50 shops, 72 riders and 890 customers; bots play customers, shop staff, riders and admins against an isolated copy of the platform with its own database; a checker tests rules during and after the run and writes a report; a real finding becomes a failing API test, then the fix, and the next run replays the same seed](media/simulation.svg)
+
 A checker watches every run and writes a report: what broke, response times per endpoint, and a night report per zone. A real finding becomes a failing API test first, then the fix. Every feature's spec names its simulator change, or says why it needs none.
 
 - **The town:** 6 zones drawn from real town boundaries, 50 shops with real-style menus and opening hours, 72 riders and 890 customers.
@@ -201,9 +210,9 @@ Links: [LinkedIn](https://www.linkedin.com/in/moatez-mkhinini) and [GitHub](http
 
 ## How these numbers were measured
 
-Commits and test files on 17 November 2026, everything else on 21 November 2026, in the private repositories.
+Test files on 17 November 2026, everything else on 21 November 2026, in the private repositories. Commits are counted up to 20 November 2026.
 
-- Commits per year: `git log --format=%ad --date=format:%Y` per repository, summed. Agent-assisted: `git log --since=2026-09-06 --format=%B | grep -c '^Co-Authored-By: Claude'`, summed over the ten repositories (4,067 of 4,271).
+- Commits per year: `git log --format=%ad --date=format:%Y` per repository, summed. Agent-assisted: `git log --since=2026-09-06 --format=%B | grep -c '^Co-Authored-By: Claude'`, summed over the ten repositories (4,228 of 4,434). The chart is the running total per month of the same `git log`.
 - Test files: `git ls-files` counts per repository, the same day. A stricter filename pattern gives 360 for the API and 368 for the apps, so both are about right.
 - Roles and permissions: `Admin::ROLES` (15), the permission names in the API's `Permission` class (63) and the shop-user roles (5). Shop kinds: `Shop::CATEGORIES` (18) and `SERVICE_CATEGORIES` (8). Admin limits: 124 entries in the platform settings catalogue.
 - Locales: the five `*.json` files in the API's `resources/lang` and the customer app's `src/i18n`.
