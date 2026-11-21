@@ -4,7 +4,7 @@ GhostChef is a food-ordering platform I started in 2019 and have owned ever sinc
 
 The restaurant's pages are still online: [Facebook](https://www.facebook.com/ghostchef.tn) with 5.3K followers, [Instagram](https://www.instagram.com/ghostchef.tn/), and [Google Maps](https://maps.google.com/?cid=8810174624179311072) with 4.5 stars from 12 reviews, now marked as permanently closed.
 
-Since September 2026 I have been rebuilding it as a delivery platform for restaurants, shops and service businesses, with a coding agent (Claude Code) and my own agent tooling. It is in development and not launched. The new code is private; I walk through it on request.
+Since September 2026 I have been rebuilding it as a delivery platform for restaurants, shops and service businesses, with a coding agent (Claude Code) and my own agent tooling. It is in development and not launched. I build it in my own time; if it launches, a local partner runs operations and I stay the owner and engineer. The new code is private; I walk through it on request.
 
 [![21 second demo](media/demo.gif)](media/brag.mp4)
 
@@ -168,8 +168,8 @@ Phone apps:
 | Customer app, Arabic home | Customer app, Arabic cart | Customer app, dish options |
 |:---:|:---:|:---:|
 | ![Customer app home in Arabic](media/screens/customer-app-ar-home.png) | ![Customer app cart in Arabic](media/screens/customer-app-ar-cart.png) | ![Dish options in French](media/screens/customer-app-fr-options.png) |
-| **Customer app, loyalty points** | **Shop app, till** | **Shop app, offline sale** |
-| ![Loyalty points and promo-code shop in French](media/screens/customer-app-fr-loyalty.png) | ![Shop till in French](media/screens/shop-app-fr-sell.png) | ![Shop till keeping a sale offline](media/screens/shop-app-en-offline-sale.png) |
+| **Customer app, loyalty points** | **Shop app, POS** | **Shop app, offline sale** |
+| ![Loyalty points and promo-code shop in French](media/screens/customer-app-fr-loyalty.png) | ![Shop POS in French](media/screens/shop-app-fr-sell.png) | ![Shop POS keeping a sale offline](media/screens/shop-app-en-offline-sale.png) |
 | **Rider app, route** | **Rider app, papers** | **Admin app, Derja** |
 | ![Rider route with an expired-paper banner](media/screens/rider-app-en-route-home.png) | ![Rider documents](media/screens/rider-app-papers.png) | ![Admin app in Tunisian Derja](media/screens/admin-app-derja-rtl.png) |
 
@@ -189,6 +189,13 @@ Since September 2026 most commits are written with Claude Code and carry a co-au
 
 What I do: product decisions, architecture, the rules files the agent reads, and review of what it produces. The agent types much of the code; I decide what the code is for and whether it is right.
 
+Where I overrode the agent:
+
+- **Inventory never blocks an order.** The agent's first inventory build let a shop's stock count refuse orders. I had it removed: a count typed in wrong must not turn customers away. A test pins it.
+- **No platform fee on POS orders.** The agent read a zero fee on a shop's own POS orders as a bug and charged it. I reverted that: the platform never bills a shop's POS sales.
+- **Admin invites by SMS.** A task spec said to send admin password invites by email. I chose SMS, because most people who use apps like these in Tunisia do not use email.
+- **grep over a code graph.** I A/B-tested a code-graph tool for my agents against plain grep: the same tokens, 28% slower, and blind to parts of Laravel. I dropped it as the default.
+
 My own tooling around it:
 
 - custom subagents (a `worker` agent and ten business-advisor agents);
@@ -202,7 +209,7 @@ My own tooling around it:
 - Order film, 84 s: [English](media/ghostchef-order-film-en.mp4), [French](media/ghostchef-order-film-fr.mp4), [Arabic](media/ghostchef-order-film-ar.mp4)
 - Cartoon film, 106 s: [English](media/ghostchef-cartoon-en.mp4), [French](media/ghostchef-cartoon-fr.mp4), [Arabic](media/ghostchef-cartoon-ar.mp4)
 
-The films show the planned launch in M'saken; the platform is not live yet.
+The films show the planned launch in M'saken, which a local partner would run; the platform is not live yet.
 
 ## Status
 
