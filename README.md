@@ -61,7 +61,7 @@ Four sides use it: customers, shops, riders and the operations team. Each has a 
 **Shops**
 - 18 shop categories and 8 service categories, from restaurants and butchers to jewelers and barbers.
 - Incoming orders ring on the shop's phone; staff accept, prepare and hand them to a rider, and a ready screen shows which orders wait for collection.
-- A free till for counter and phone sales. It keeps working offline and sends the sales when the server answers again.
+- A free POS for counter and phone sales. It keeps working offline and sends the sales when the server answers again.
 - Menu editor with options, hidden items and reordering. Menu changes wait for an admin's review; price changes show at once.
 - Weighed items for butchers and fishmongers: the shop records the real weight, with tolerance rules and a call to the customer when an item comes up short.
 - Stock tracking with ingredients, recipes, purchases, waste and blind counts. It never blocks an order.
