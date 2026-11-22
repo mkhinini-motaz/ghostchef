@@ -1,0 +1,33 @@
+flowchart LR
+  subgraph Mobile["React Native apps"]
+    C[Customer]
+    M[Merchant]
+    R[Rider]
+    A[Admin]
+  end
+  subgraph Web["Next.js web apps"]
+    WC[Customer]
+    WS[Shop]
+    WA[Admin]
+  end
+  API[Laravel API]
+  RT[Node.js Socket.IO server]
+  RD[(Redis)]
+  DB[(MySQL)]
+  FCM[Firebase push]
+  Mobile --> API
+  Web --> API
+  Mobile <--> RT
+  Web <--> RT
+  RT --- RD
+  API --> DB
+  API --> FCM
+  API --> RT
+  subgraph Infra["ghost-infra"]
+    D[Docker Compose]
+    CD[Caddy]
+    TF[Terraform]
+    GH[GitHub Actions]
+  end
+  Infra -. deploys .-> API
+  Infra -. deploys .-> RT

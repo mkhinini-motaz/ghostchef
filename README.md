@@ -90,41 +90,7 @@ Four sides use it: customers, shops, riders and the operations team. Each has a 
 
 ## Architecture
 
-```mermaid
-flowchart LR
-  subgraph Mobile["React Native apps"]
-    C[Customer]
-    M[Merchant]
-    R[Rider]
-    A[Admin]
-  end
-  subgraph Web["Next.js web apps"]
-    WC[Customer]
-    WS[Shop]
-    WA[Admin]
-  end
-  API[Laravel API]
-  RT[Node.js Socket.IO server]
-  RD[(Redis)]
-  DB[(MySQL)]
-  FCM[Firebase push]
-  Mobile --> API
-  Web --> API
-  Mobile <--> RT
-  Web <--> RT
-  RT --- RD
-  API --> DB
-  API --> FCM
-  API --> RT
-  subgraph Infra["ghost-infra"]
-    D[Docker Compose]
-    CD[Caddy]
-    TF[Terraform]
-    GH[GitHub Actions]
-  end
-  Infra -. deploys .-> API
-  Infra -. deploys .-> RT
-```
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/architecture-dark.svg"><img src="docs/diagrams/architecture.svg" alt="Architecture diagram: mobile and web apps call the Laravel API and a Socket.IO server; the API uses MySQL and Firebase push; infra tooling deploys the API and the server."></picture>
 
 Each box exists as a repository: `food-api`, `ghostws`, `food-client`, `food-shop`, `food-admin`, `ghostclient`, `ghostshopapp`, `ghostriderapp`, `ghostadminapp`, `ghost-infra`. They are private. The code I wrote by hand from 2019 to 2023 is public: [Food](https://github.com/mkhinini-motaz/Food) (the API), [food-ws](https://github.com/mkhinini-motaz/food-ws) (realtime), [food-client](https://github.com/mkhinini-motaz/food-client), [food-shop](https://github.com/mkhinini-motaz/food-shop), [deliveryapp](https://github.com/mkhinini-motaz/deliveryapp) and [ghostclient](https://github.com/mkhinini-motaz/ghostclient). The API serves four JWT surfaces (customer, shop, rider, admin). The realtime server uses the Socket.IO Redis adapter. Push goes through Firebase.
 
