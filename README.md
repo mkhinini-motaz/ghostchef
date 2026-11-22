@@ -126,7 +126,7 @@ flowchart LR
   Infra -. deploys .-> RT
 ```
 
-Each box exists as a repository: `food-api`, `ghostws`, `food-client`, `food-shop`, `food-admin`, `ghostclient`, `ghostshopapp`, `ghostriderapp`, `ghostadminapp`, `ghost-infra`. They are private; the public repositories with some of the same names hold the 2019 to 2023 code. The API serves four JWT surfaces (customer, shop, rider, admin). The realtime server uses the Socket.IO Redis adapter. Push goes through Firebase.
+Each box exists as a repository: `food-api`, `ghostws`, `food-client`, `food-shop`, `food-admin`, `ghostclient`, `ghostshopapp`, `ghostriderapp`, `ghostadminapp`, `ghost-infra`. They are private. The code I wrote by hand from 2019 to 2023 is public: [Food](https://github.com/mkhinini-motaz/Food) (the API), [food-ws](https://github.com/mkhinini-motaz/food-ws) (realtime), [food-client](https://github.com/mkhinini-motaz/food-client), [food-shop](https://github.com/mkhinini-motaz/food-shop), [deliveryapp](https://github.com/mkhinini-motaz/deliveryapp) and [ghostclient](https://github.com/mkhinini-motaz/ghostclient). The API serves four JWT surfaces (customer, shop, rider, admin). The realtime server uses the Socket.IO Redis adapter. Push goes through Firebase.
 
 ## Simulation testing
 
@@ -198,9 +198,9 @@ Where I overrode the agent:
 
 My own tooling around it:
 
-- custom subagents (a `worker` agent and ten business-advisor agents);
+- custom subagents: a `worker` agent ([public](https://github.com/mkhinini-motaz/claude-code-session-toolkit/tree/main/worker-agent)) and ten business-advisor agents ([public as founder-advisors](https://github.com/mkhinini-motaz/founder-advisors));
 - hooks: a git guard, docs-size limits, and state restore after context compaction;
-- command-line tools, written by Claude Code: a token-usage report from session transcripts, cost per subagent, a docs-size checker, a dev-server reaper;
+- command-line tools, written by Claude Code: a token-usage report from session transcripts, cost per subagent, a docs-size checker, a dev-server reaper (public in [claude-code-session-toolkit](https://github.com/mkhinini-motaz/claude-code-session-toolkit));
 - an eval suite for the advisor agents: each gets a question set, a judge model checks every answer against a checklist, with a no-advisor baseline and repeated trials.
 
 ## Videos
